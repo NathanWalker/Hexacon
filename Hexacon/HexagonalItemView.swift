@@ -12,13 +12,13 @@ protocol HexagonalItemViewDelegate: class {
     func hexagonalItemViewClikedOnButton(forIndex index: Int)
 }
 
-open class HexagonalItemView: UIImageView {
+public class HexagonalItemView: UIImageView {
     
     // MARK: - data
     
     public init(image: UIImage, appearance: HexagonalItemViewAppearance) {
         if appearance.needToConfigureItem {
-            let modifiedImage = image.roundImage(appearance.itemBorderColor, borderWidth: appearance.itemBorderWidth)
+            let modifiedImage = image.roundImage(color: appearance.itemBorderColor, borderWidth: appearance.itemBorderWidth)
             super.init(image: modifiedImage)
         } else {
             super.init(image: image)
@@ -34,20 +34,20 @@ open class HexagonalItemView: UIImageView {
         super.init(coder: aDecoder)
     }
     
-    open var index: Int?
+    public var index: Int?
     
     weak var delegate: HexagonalItemViewDelegate?
     
     // MARK: - event methods
     
-    override open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         
         guard let index = index else { return }
         
         delegate?.hexagonalItemViewClikedOnButton(forIndex: index)
     }
-
+    
 }
 
 internal extension UIView {
@@ -60,28 +60,28 @@ internal extension UIView {
         UIGraphicsEndImageContext()
         return image!.roundImage()
     }
-
+    
 }
 
 internal extension UIImage {
     
-    func roundImage(_ color: UIColor? = nil, borderWidth: CGFloat = 0) -> UIImage {
+    func roundImage(color: UIColor? = nil, borderWidth: CGFloat = 0) -> UIImage {
         guard self.size != .zero else { return self }
         
         let newImage = self.copy() as! UIImage
         let cornerRadius = self.size.height/2
         UIGraphicsBeginImageContextWithOptions(self.size, false, 1.0)
-        let bounds = CGRect(origin: CGPoint.zero, size: self.size)
+        let bounds = CGRect(origin: CGPoint(), size: self.size)
         let path = UIBezierPath(roundedRect: bounds.insetBy(dx: borderWidth / 2, dy: borderWidth / 2), cornerRadius: cornerRadius)
-        let context = UIGraphicsGetCurrentContext()
+        guard let context = UIGraphicsGetCurrentContext() else { return self }
         
-        context?.saveGState()
+        context.saveGState()
         // Clip the drawing area to the path
         path.addClip()
         
         // Draw the image into the context
         newImage.draw(in: bounds)
-        context?.restoreGState()
+        context.restoreGState()
         
         // Configure the stroke
         color?.setStroke()
@@ -94,5 +94,6 @@ internal extension UIImage {
         UIGraphicsEndImageContext()
         return finalImage ?? UIImage()
     }
-
+    
 }
+
