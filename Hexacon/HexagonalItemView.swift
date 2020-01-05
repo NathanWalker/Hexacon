@@ -8,11 +8,11 @@
 
 import UIKit
 
-protocol HexagonalItemViewDelegate: class {
+@objc public protocol HexagonalItemViewDelegate: class {
     func hexagonalItemViewClikedOnButton(forIndex index: Int)
 }
 
-public class HexagonalItemView: UIImageView {
+@objc public class HexagonalItemView: UIImageView {
     
     // MARK: - data
     

@@ -8,9 +8,9 @@
 
 import UIKit
 
-public enum HexagonalAnimationType { case Spiral, Circle, None }
+@objc public enum HexagonalAnimationType: Int { case Spiral, Circle, None }
 
-public struct HexagonalItemViewAppearance {
+@objc public class HexagonalItemViewAppearance: NSObject {
     
     //item appearance
     public let needToConfigureItem: Bool
@@ -45,7 +45,7 @@ public struct HexagonalItemViewAppearance {
                                            itemSize: 50,
                                            itemSpacing: 10,
                                            itemBorderWidth: 5,
-                                           itemBorderColor: UIColor.grayColor,
+                                           itemBorderColor: UIColor.gray,
                                            animationType: .Circle,
                                            animationDuration: 0.2)
     }

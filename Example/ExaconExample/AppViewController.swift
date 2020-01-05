@@ -30,7 +30,7 @@ class AppViewController: UIViewController {
                                                           itemSize: 50,
                                                           itemSpacing: 10,
                                                           itemBorderWidth: 0,
-                                                          itemBorderColor: UIColor.grayColor(),
+                                                          itemBorderColor: UIColor.gray,
                                                           animationType: .Circle,
                                                           animationDuration: 0.05)
         return view
@@ -50,7 +50,7 @@ class AppViewController: UIViewController {
         view.addSubview(hexagonalView)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         hexagonalView.reloadData()
     }

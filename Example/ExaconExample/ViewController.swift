@@ -40,7 +40,7 @@ final class ViewController: UIViewController {
         view.addSubview(hexagonalView)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         hexagonalView.reloadData()
     }

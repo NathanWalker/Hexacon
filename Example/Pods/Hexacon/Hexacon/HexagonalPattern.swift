@@ -86,7 +86,7 @@ final class HexagonalPattern {
     
     // MARK: - configuration methods
     
-    private func neighbor(origin origin: CGPoint,direction: HexagonalDirection) -> CGPoint {
+    private func neighbor(origin: CGPoint,direction: HexagonalDirection) -> CGPoint {
         //take the current direction
         let direction = direction.direction()
         

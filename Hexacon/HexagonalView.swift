@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol HexagonalViewDelegate: class {
+@objc public protocol HexagonalViewDelegate: class {
     /**
      This method is called when the user has selected a view
      
@@ -31,7 +31,7 @@ public extension HexagonalViewDelegate {
     func hexagonalView(hexagonalView: HexagonalView, willCenterOnIndex index: Int) { }
 }
 
-public protocol HexagonalViewDataSource: class {
+@objc public protocol HexagonalViewDataSource: class {
     /**
      Return the number of items the view will contain
      
@@ -67,7 +67,7 @@ public extension HexagonalViewDataSource {
     func hexagonalView(hexagonalView: HexagonalView,viewForIndex index: Int) -> UIView? { return nil }
 }
 
-public final class HexagonalView: UIScrollView {
+@objc public final class HexagonalView: UIScrollView {
     
     // MARK: - subviews
     
@@ -78,22 +78,22 @@ public final class HexagonalView: UIScrollView {
     /**
      An object that supports the HexagonalViewDataSource protocol and can provide views or images to configures the HexagonalView.
      */
-    public weak var hexagonalDataSource: HexagonalViewDataSource?
+    @objc public weak var hexagonalDataSource: HexagonalViewDataSource?
     
     /**
      An object that supports the HexagonalViewDelegate protocol and can respond to HexagonalView events.
      */
-    public weak var hexagonalDelegate: HexagonalViewDelegate?
+    @objc public weak var hexagonalDelegate: HexagonalViewDelegate?
     
     /**
      The index of the view where the HexagonalView is or was centered on.
      */
-    public var lastFocusedViewIndex: Int = 0
+    @objc public var lastFocusedViewIndex: Int = 0
     
     /**
      the appearance is used to configure the global apperance of the layout and the HexagonalItemView
      */
-    public var itemAppearance: HexagonalItemViewAppearance
+    @objc public var itemAppearance: HexagonalItemViewAppearance
     
     //we are using a zoom cache setted to 1 to make the snap work even if the user haven't zoomed yet
     private var zoomScaleCache: CGFloat = 1
@@ -135,7 +135,7 @@ public final class HexagonalView: UIScrollView {
         alwaysBounceHorizontal = true
         alwaysBounceVertical = true
         bouncesZoom = false
-        decelerationRate = UIScrollViewDecelerationRateFast
+        decelerationRate = UIScrollView.DecelerationRate.fast
         delegate = self
         minimumZoomScale = 0.2
         maximumZoomScale = 2
@@ -202,8 +202,8 @@ public final class HexagonalView: UIScrollView {
         let animationIndex = Double(itemAppearance.animationType == .Spiral ? index : ring)
         
         //make a pop animation
-        UIView.animateWithDuration(0.3, delay: TimeInterval(animationIndex*itemAppearance.animationDuration), usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [], animations: { () -> Void in
-            view.transform = CGAffineTransformIdentity
+        UIView.animate(withDuration: 0.3, delay: TimeInterval(animationIndex*itemAppearance.animationDuration), usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [], animations: { () -> Void in
+            view.transform = CGAffineTransform.identity
         }, completion: nil)
     }
     
@@ -432,7 +432,7 @@ extension HexagonalView: UIScrollViewDelegate {
 
 extension HexagonalView: HexagonalItemViewDelegate {
     
-    func hexagonalItemViewClikedOnButton(forIndex index: Int) {
+    public func hexagonalItemViewClikedOnButton(forIndex index: Int) {
         hexagonalDelegate?.hexagonalView(hexagonalView: self, didSelectItemAtIndex: index)
     }
 }
