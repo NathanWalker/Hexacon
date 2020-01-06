@@ -13,15 +13,15 @@ import UIKit
 @objc public class HexagonalItemViewAppearance: NSObject {
     
     //item appearance
-    @objc public let needToConfigureItem: Bool
-    @objc public let itemSize: CGFloat
-    @objc public let itemSpacing: CGFloat
-    @objc public let itemBorderWidth: CGFloat
-    @objc public let itemBorderColor: UIColor
+    @objc public var needToConfigureItem: Bool
+    @objc public var itemSize: CGFloat
+    @objc public var itemSpacing: CGFloat
+    @objc public var itemBorderWidth: CGFloat
+    @objc public var itemBorderColor: UIColor
     
     //animation
-    @objc public let animationType: HexagonalAnimationType
-    @objc public let animationDuration: TimeInterval
+    @objc public var animationType: HexagonalAnimationType
+    @objc public var animationDuration: TimeInterval
     
     public init(needToConfigureItem: Bool,
                 itemSize: CGFloat,
