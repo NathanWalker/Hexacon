@@ -12,13 +12,13 @@ import UIKit
     
     // MARK: - typeAlias
     
-    typealias HexagonalPosition = (center: CGPoint,ring: Int)
+    public typealias HexagonalPosition = (center: CGPoint,ring: Int)
     
     // MARK: - data
 
-    internal var repositionCenter: ((CGPoint, Int, Int) -> ())?
+    public var repositionCenter: ((CGPoint, Int, Int) -> ())?
     
-    fileprivate var position: HexagonalPosition! {
+    public var position: HexagonalPosition! {
         didSet {
             //while our position is bellow the size we can continue
             guard positionIndex < size else {
@@ -31,17 +31,17 @@ import UIKit
         }
     }
     
-    fileprivate var directionFromCenter: HexagonalDirection
+    public var directionFromCenter: HexagonalDirection
     
-    fileprivate var reachedLastPosition = false
-    fileprivate var positionIndex = 0
+    public var reachedLastPosition = false
+    public var positionIndex = 0
     
-    fileprivate let sideNumber: Int = 6
+    public let sideNumber: Int = 6
     
     //properties
-    fileprivate let size: Int
-    fileprivate let itemSpacing: CGFloat
-    fileprivate let maxRadius: Int
+    public let size: Int
+    public let itemSpacing: CGFloat
+    public let maxRadius: Int
     
     // MARK: - init
     
@@ -60,7 +60,7 @@ import UIKit
     
     - returns: the size of the grid
     */
-    func sizeForGridSize() -> CGFloat {
+    public func sizeForGridSize() -> CGFloat {
         return 2*itemSpacing*CGFloat(maxRadius)
     }
     
@@ -68,7 +68,7 @@ import UIKit
      create the grid with a circular pattern beginning from the center
      in each loop we are sending back a center for a new View     
      */
-    func createGrid(FromCenter newCenter: CGPoint) {
+    public func createGrid(FromCenter newCenter: CGPoint) {
         //initializing the algorythm
         start(newCenter)
     
@@ -86,15 +86,15 @@ import UIKit
     
     // MARK: - configuration methods
     
-    fileprivate func neighbor(origin: CGPoint,direction: HexagonalDirection) -> CGPoint {
+    public func neighbor(origin: CGPoint,direction: HexagonalDirection) -> CGPoint {
         //take the current direction
-        let direction = direction.direction()
+        let direction = HexagonalDirectionUtils.direction(type: direction)
         
         //then multiply it to find the new center
         return CGPoint(x: origin.x + itemSpacing*direction.x,y: origin.y + itemSpacing*direction.y)
     }
     
-    fileprivate func start(_ newCenter: CGPoint) {
+    public func start(_ newCenter: CGPoint) {
         //initializing with the center given
         position = (center: newCenter,ring: 0)
         
@@ -103,7 +103,7 @@ import UIKit
     }
     
     
-    fileprivate func createRing(withRadius radius: Int) {
+    public func createRing(withRadius radius: Int) {
         //for each side of the ring
         for _ in 0...(sideNumber - 1) {
             
@@ -116,11 +116,11 @@ import UIKit
                 position = (center: neighbor(origin: position.center,direction: directionFromCenter),ring: radius + 1)
             }
             //then move to another position
-            directionFromCenter.move()
+            directionFromCenter = HexagonalDirectionUtils.move(type: directionFromCenter)
         }
     }
     
-    fileprivate func jumpToNextRing() {
+    public func jumpToNextRing() {
         //the next ring is always two position bellow the previous one
         position = (center: CGPoint(x: position.center.x ,y: position.center.y + 2*itemSpacing),ring: position.ring + 1)
     }

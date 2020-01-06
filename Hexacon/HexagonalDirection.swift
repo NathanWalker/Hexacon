@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum HexagonalDirection: Int {
+@objc public enum HexagonalDirection: Int {
     
     case right
     case rightUp
@@ -17,41 +17,44 @@ enum HexagonalDirection: Int {
     case leftDown
     case rightDown
     
+}
+
+@objc public class HexagonalDirectionUtils: NSObject {
     /**
-     increment the enum to the next move, if it reach the end it come back a the beggining
-     */
-    mutating func move()  {
-        if self != .rightDown {
-            self = HexagonalDirection(rawValue: self.rawValue + 1)!
-        } else {
-            self = .right
-        }
-    }
+    this this all the direction we can found in an hexagonal layout following the axial coordinate
+    it's used to move to the next center on the grid
     
-    /**
-     this this all the direction we can found in an hexagonal layout following the axial coordinate
-     it's used to move to the next center on the grid
-     
-     - returns: a point diving the direction of the new center
-     */
-    func direction() -> CGPoint {
+    - returns: a point diving the direction of the new center
+    */
+    @objc public static func direction(type: HexagonalDirection) -> CGPoint {
         
         let horizontalPadding: CGFloat = 1.2
         let verticalPadding: CGFloat = 1
         
-        switch self {
-            case .right:
+        switch type {
+            case HexagonalDirection.right:
                 return CGPoint(x: horizontalPadding,y: 0)
-            case .rightUp:
+            case HexagonalDirection.rightUp:
                 return CGPoint(x: horizontalPadding/2,y: -verticalPadding)
-            case .leftUp:
+            case HexagonalDirection.leftUp:
                 return CGPoint(x: -horizontalPadding/2,y: -verticalPadding)
-            case .left:
+            case HexagonalDirection.left:
                 return CGPoint(x: -horizontalPadding,y: 0)
-            case .leftDown:
+            case HexagonalDirection.leftDown:
                 return CGPoint(x: -horizontalPadding/2,y: verticalPadding)
-            case .rightDown:
+            case HexagonalDirection.rightDown:
                 return CGPoint(x: horizontalPadding/2,y: verticalPadding)
+        }
+    }
+    
+    /**
+     increment the enum to the next move, if it reach the end it come back a the beggining
+     */
+    @objc public static func move(type: HexagonalDirection) -> HexagonalDirection  {
+        if type != HexagonalDirection.rightDown {
+            return HexagonalDirection(rawValue: type.rawValue + 1)!
+        } else {
+            return HexagonalDirection.right
         }
     }
 }
