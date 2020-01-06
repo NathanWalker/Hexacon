@@ -23,7 +23,7 @@ import UIKit
     @objc public var animationType: HexagonalAnimationType
     @objc public var animationDuration: TimeInterval
     
-    public init(needToConfigureItem: Bool,
+    @objc public init(needToConfigureItem: Bool,
                 itemSize: CGFloat,
                 itemSpacing: CGFloat,
                 itemBorderWidth: CGFloat,
@@ -40,7 +40,7 @@ import UIKit
         self.animationDuration = animationDuration
     }
     
-    static func defaultAppearance() -> HexagonalItemViewAppearance {
+    @objc public static func defaultAppearance() -> HexagonalItemViewAppearance {
         return HexagonalItemViewAppearance(needToConfigureItem: false,
                                            itemSize: 50,
                                            itemSpacing: 10,
