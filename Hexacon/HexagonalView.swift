@@ -71,7 +71,7 @@ public extension HexagonalViewDataSource {
     
     // MARK: - subviews
     
-    private lazy var contentView = UIView()
+    @objc public lazy var contentView = UIView()
     
     // MARK: - data
     
@@ -146,7 +146,7 @@ public extension HexagonalViewDataSource {
     
     // MARK: - configuration methods
     
-    private func createHexagonalGrid() {
+    @objc public func createHexagonalGrid() {
         //instantiate the hexagonal pattern with the number of views
         hexagonalPattern = HexagonalPattern(size: viewsArray.count, itemSpacing: itemAppearance.itemSpacing, itemSize: itemAppearance.itemSize)
         hexagonalPattern.repositionCenter = { [weak self] (center, ring, index) in
@@ -162,7 +162,7 @@ public extension HexagonalViewDataSource {
         hexagonalPattern.createGrid(FromCenter: CGPoint(x: contentView.frame.width/2, y: contentView.frame.height/2))
     }
     
-    private func createHexagonalViewItem(index: Int) -> HexagonalItemView {
+    @objc public func createHexagonalViewItem(index: Int) -> HexagonalItemView {
         //instantiate the userView with the user
         
         var itemView: HexagonalItemView
@@ -192,7 +192,7 @@ public extension HexagonalViewDataSource {
         return itemView
     }
     
-    private func positionAndAnimateItemView(forCenter center: CGPoint, ring: Int, index: Int) {
+    @objc public func positionAndAnimateItemView(forCenter center: CGPoint, ring: Int, index: Int) {
         guard itemAppearance.animationType != .None else { return }
         
         //set the new view's center
@@ -344,7 +344,7 @@ public extension HexagonalViewDataSource {
     
     // MARK: - class methods
     
-    private static func rectInContentView(point: CGPoint,zoomScale: CGFloat, size: CGSize) -> CGRect {
+    @objc public static func rectInContentView(point: CGPoint,zoomScale: CGFloat, size: CGSize) -> CGRect {
         let center = CGPoint(x: point.x * zoomScale, y: point.y * zoomScale)
         
         return CGRect(x: center.x-size.width*0.5, y: center.y-size.height*0.5, width: size.width, height: size.height)

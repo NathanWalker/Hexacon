@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class HexagonalPattern {
+@objc public class HexagonalPattern: NSObject {
     
     // MARK: - typeAlias
     
