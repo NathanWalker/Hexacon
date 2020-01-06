@@ -311,7 +311,7 @@ public extension HexagonalViewDataSource {
     /**
      This function load or reload all the view from the dataSource and refreshes the display
      */
-    public func reloadData() {
+    @objc public func reloadData() {
         contentView.subviews.forEach { $0.removeFromSuperview() }
         viewsArray = [HexagonalItemView]()
         
