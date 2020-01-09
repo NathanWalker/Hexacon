@@ -13,11 +13,9 @@ class AppViewController: UIViewController {
     
     // MARK: - data
     
-    let iconArray: [UIImage] = ["call","mail","music","appstore","message","settings","photo","camera","safari","notes",
-                                "addressbook","time","calculator","movie","maps","facetime","gamecenter","compass",
-                                "passbook","stocks","newsstand","calendar","reminders","weather","itunes"].map { UIImage(named: $0)! }
+    var iconArray = [ItemImage]()
     
-    var dataArray = [UIImage]()
+    var dataArray = [ItemImage]()
     
     // MARK: - subviews
     
@@ -28,9 +26,11 @@ class AppViewController: UIViewController {
         
         view.itemAppearance = HexagonalItemViewAppearance(needToConfigureItem: true,
                                                           itemSize: 50,
-                                                          itemSpacing: 10,
+                                                          itemSpacing: 25,
                                                           itemBorderWidth: 0,
                                                           itemBorderColor: UIColor.gray,
+                                                          itemGlowColor: nil,
+                                                          itemPulse: true,
                                                           animationType: .Circle,
                                                           animationDuration: 0.05)
         return view
@@ -41,7 +41,13 @@ class AppViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(red: 18/255, green: 52/255, blue: 86/255, alpha: 1)
+        for (index, element) in ["call","mail","music","appstore","message","settings","photo","camera","safari","notes",
+        "addressbook","time","calculator","movie","maps","facetime","gamecenter","compass",
+        "passbook","stocks","newsstand","calendar","reminders","weather","itunes"].enumerated() {
+            iconArray.append(ItemImage(image: UIImage(named: element)!, appearance: HexagonalItemViewAppearance(needToConfigureItem: true, itemSize: index == 6 || index == 10 ? 60 : 50, itemSpacing: 25, itemBorderWidth: index == 6 || index == 10 ? 4 : 0, itemBorderColor: index == 6 || index == 10 ? UIColor.lightGray : UIColor.clear, itemGlowColor: index == 6 || index == 10 ? UIColor.blue : nil, itemPulse: index == 6 || index == 10, animationType: HexagonalAnimationType.Circle, animationDuration: 0.3)))
+        }
+        
+        view.backgroundColor = UIColor.white
 
         for _ in 0...3 {
             dataArray += iconArray
@@ -52,13 +58,19 @@ class AppViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+//        hexagonalView.contentSize = CGSize(width: self.view.bounds.size.width*2, height: self.view.bounds.size.height*2)
+//        hexagonalView.setContentOffset(CGPoint(x: -self.view.bounds.size.width*2, y: -self.view.bounds.size.height*2), animated: false)
         hexagonalView.reloadData()
     }
 }
 
 extension AppViewController: HexagonalViewDataSource {
+    func hexagonalView(hexagonalView: HexagonalView, viewForIndex index: Int) -> UIView? {
+        return UIView()
+    }
     
-    func hexagonalView(hexagonalView: HexagonalView, imageForIndex index: Int) -> UIImage? {
+    
+    func hexagonalView(hexagonalView: HexagonalView, itemForIndex index: Int) -> ItemImage? {
         return dataArray[index]
     }
     

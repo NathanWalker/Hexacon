@@ -1,5 +1,9 @@
 use_frameworks!
+platform :ios, '12.0'
 
 target ‘HexaconExample’ do
-   pod 'Hexacon'
+   platform :ios, '12.0'
+  #  pod 'Hexacon'
+  # Dev locally easier:
+   pod 'Hexacon', :path => '/Users/nathan/Documents/github/sweet-io/tmp/Hexacon'
 end

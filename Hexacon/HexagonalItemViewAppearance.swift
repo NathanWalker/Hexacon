@@ -18,6 +18,8 @@ import UIKit
     @objc public var itemSpacing: CGFloat
     @objc public var itemBorderWidth: CGFloat
     @objc public var itemBorderColor: UIColor
+    @objc public var itemGlowColor: UIColor?
+    @objc public var itemPulse: Bool
     
     //animation
     @objc public var animationType: HexagonalAnimationType
@@ -28,6 +30,8 @@ import UIKit
                 itemSpacing: CGFloat,
                 itemBorderWidth: CGFloat,
                 itemBorderColor: UIColor,
+                itemGlowColor: UIColor?,
+                itemPulse: Bool,
                 animationType: HexagonalAnimationType,
                 animationDuration: TimeInterval) {
         
@@ -36,6 +40,8 @@ import UIKit
         self.itemSpacing = itemSpacing
         self.itemBorderWidth = itemBorderWidth
         self.itemBorderColor = itemBorderColor
+        self.itemGlowColor = itemGlowColor
+        self.itemPulse = itemPulse
         self.animationType = animationType
         self.animationDuration = animationDuration
     }
@@ -46,6 +52,8 @@ import UIKit
                                            itemSpacing: 10,
                                            itemBorderWidth: 5,
                                            itemBorderColor: UIColor.gray,
+                                           itemGlowColor: nil,
+                                           itemPulse: false,
                                            animationType: .Circle,
                                            animationDuration: 0.2)
     }

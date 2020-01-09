@@ -15,7 +15,7 @@ import UIKit
      - parameter hexagonalView: The HexagonalView we are targeting
      - parameter index:         The current Index
      */
-    func hexagonalView(hexagonalView: HexagonalView, didSelectItemAtIndex index: Int)
+    @objc func hexagonalView(hexagonalView: HexagonalView, didSelectItemAtIndex index: Int)
     
     /**
      This method is called when the HexagonalView will center on an item, it gives you the new value of lastFocusedViewIndex
@@ -23,12 +23,22 @@ import UIKit
      - parameter hexagonalView: The HexagonalView we are targeting
      - parameter index:         The current Index
      */
-    func hexagonalView(hexagonalView: HexagonalView, willCenterOnIndex index: Int)
+    @objc func hexagonalView(hexagonalView: HexagonalView, willCenterOnIndex index: Int)
 }
 
 public extension HexagonalViewDelegate {
     func hexagonalView(hexagonalView: HexagonalView, didSelectItemAtIndex index: Int) { }
     func hexagonalView(hexagonalView: HexagonalView, willCenterOnIndex index: Int) { }
+}
+
+@objc public class ItemImage: NSObject {
+    @objc public var image: UIImage
+    @objc public var appearance: HexagonalItemViewAppearance
+    
+    @objc public init(image: UIImage, appearance: HexagonalItemViewAppearance) {
+        self.image = image
+        self.appearance = appearance
+    }
 }
 
 @objc public protocol HexagonalViewDataSource: class {
@@ -39,7 +49,7 @@ public extension HexagonalViewDelegate {
      
      - returns: The number of items
      */
-    func numberOfItemInHexagonalView(hexagonalView: HexagonalView) -> Int
+    @objc func numberOfItemInHexagonalView(hexagonalView: HexagonalView) -> Int
     
     /**
      Return a image to be displayed at index
@@ -49,7 +59,7 @@ public extension HexagonalViewDelegate {
      
      - returns: The image we want to display
      */
-    func hexagonalView(hexagonalView: HexagonalView,imageForIndex index: Int) -> UIImage?
+    @objc func hexagonalView(hexagonalView: HexagonalView,itemForIndex index: Int) -> ItemImage?
     
     /**
      Return a view to be displayed at index, the view will be transformed in an image before being displayed
@@ -59,11 +69,11 @@ public extension HexagonalViewDelegate {
      
      - returns: The view we want to display
      */
-    func hexagonalView(hexagonalView: HexagonalView,viewForIndex index: Int) -> UIView?
+    @objc func hexagonalView(hexagonalView: HexagonalView,viewForIndex index: Int) -> UIView?
 }
 
 public extension HexagonalViewDataSource {
-    func hexagonalView(hexagonalView: HexagonalView,imageForIndex index: Int) -> UIImage? { return nil }
+    func hexagonalView(hexagonalView: HexagonalView,itemForIndex index: Int) -> ItemImage? { return nil }
     func hexagonalView(hexagonalView: HexagonalView,viewForIndex index: Int) -> UIView? { return nil }
 }
 
@@ -105,7 +115,7 @@ public extension HexagonalViewDataSource {
     private var hexagonalPattern: HexagonalPattern!
     
     //used to snap the view after scroll
-    private var centerOnEndScroll = false
+    @objc public var centerOnEndScroll = false
     
     // MARK: - init
     
@@ -156,10 +166,11 @@ public extension HexagonalViewDataSource {
         //set the contentView frame with the theorical size of th hexagonal grid
         let contentViewSize = hexagonalPattern.sizeForGridSize()
         contentView.bounds = CGRect(x: 0, y: 0, width: contentViewSize, height: 1.5*contentViewSize)
-        contentView.center = center
+        contentView.center = CGPoint(x: center.x + 100, y: center.y)
         
         //start creating hte grid
         hexagonalPattern.createGrid(FromCenter: CGPoint(x: contentView.frame.width/2, y: contentView.frame.height/2))
+        
     }
     
     @objc public func createHexagonalViewItem(index: Int) -> HexagonalItemView {
@@ -167,8 +178,8 @@ public extension HexagonalViewDataSource {
         
         var itemView: HexagonalItemView
         
-        if let image = hexagonalDataSource?.hexagonalView(hexagonalView: self, imageForIndex: index) {
-            itemView = HexagonalItemView(image: image, appearance: itemAppearance)
+        if let item = hexagonalDataSource?.hexagonalView(hexagonalView: self, itemForIndex: index) {
+            itemView = HexagonalItemView(image: item.image, appearance: item.appearance)
         } else {
             let view = (hexagonalDataSource?.hexagonalView(hexagonalView: self, viewForIndex: index))!
             itemView = HexagonalItemView(view: view)
@@ -188,11 +199,29 @@ public extension HexagonalViewDataSource {
         }
         
         //add to content view
+//        let itemContainer = UIView(frame: CGRect(x: 0, y: 0, width:itemView.bounds.size.width*2, height: itemView.bounds.size.height*2))
+//        itemContainer.addSubview(itemView)
+        
+        
         self.contentView.addSubview(itemView)
+//        self.contentView.addSubview(itemContainer)
+        
+        if (itemView.isActive) {
+            let pulseEffect = LFTPulseAnimation(repeatCount: Float.infinity, radius:10, position: CGPoint(x: itemView.bounds.size.width/2, y: itemView.bounds.size.height/2), color: itemView.itemGlowColor)
+        //            itemView.layer.opacity = 0.2
+//            itemView.layer.masksToBounds = true
+//            itemView.clipsToBounds = true
+                                itemView.layer.insertSublayer(pulseEffect, below: itemView.layer)
+        //            itemView.layer.insertSublayer(pulseEffect, at: 0)
+        //            itemContainer.layer.insertSublayer(pulseEffect, at: 0)
+//            self.contentView.layer.insertSublayer(pulseEffect, above: self.contentView.layer)
+                
+                }
         return itemView
     }
     
     @objc public func positionAndAnimateItemView(forCenter center: CGPoint, ring: Int, index: Int) {
+//        print("positionAndAnimateItemView")
         guard itemAppearance.animationType != .None else { return }
         
         //set the new view's center
@@ -208,6 +237,7 @@ public extension HexagonalViewDataSource {
     }
     
     private func transformView(view: HexagonalItemView) {
+//        print("transformView")
         let spacing = itemAppearance.itemSize + itemAppearance.itemSpacing/2
         
         //convert the ivew rect in the contentView coordinate
@@ -219,7 +249,7 @@ public extension HexagonalViewDataSource {
         //retrieve the center
         let center = CGPoint(x: frame.midX, y: frame.midY)
         let distanceToBeOffset = spacing * zoomScaleCache
-        let    distanceToBorder = getDistanceToBorder(center: center,distanceToBeOffset: distanceToBeOffset,insets: contentInset)
+        let distanceToBorder = getDistanceToBorder(center: center,distanceToBeOffset: distanceToBeOffset,insets: contentInset)
         
         //if we are close to a border
         if distanceToBorder < distanceToBeOffset * 2 {
@@ -236,11 +266,17 @@ public extension HexagonalViewDataSource {
                 view.transform = CGAffineTransform(scaleX: scale, y: scale)
             }
         } else {
-            view.transform = CGAffineTransform.identity
+            if (view.isActive) {
+                view.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)
+            } else {
+                view.transform = CGAffineTransform.identity
+            }
+            
         }
     }
     
-    private func centerScrollViewContents() {
+    @objc public func centerScrollViewContents() {
+//        print("centerScrollViewContents")
         let boundsSize = bounds.size
         var contentsFrame = contentView.frame
         
@@ -290,18 +326,24 @@ public extension HexagonalViewDataSource {
         return distanceToBorder*2
     }
     
-    private func centerOnIndex(index: Int, zoomScale: CGFloat) {
+    @objc public func centerOnIndex(index: Int, zoomScale: CGFloat) {
+        
+        
         guard centerOnEndScroll else { return }
+//        print("centerOnIndex centerOnEndScroll", centerOnEndScroll)
         centerOnEndScroll = false
         
         //calling delegate
         hexagonalDelegate?.hexagonalView(hexagonalView: self, willCenterOnIndex: index)
         
+//        print("centerOnIndex", index)
         //the view to center
         let view = viewsArray[Int(index)]
         
         //find the rect of the view in the contentView scale
         let rectInSelfSpace = HexagonalView.rectInContentView(point: view.center, zoomScale: zoomScale, size: bounds.size)
+//        let rectInSelfSpace = HexagonalView.rectInContentView(point: CGPoint(x: 0, y: 0), zoomScale: zoomScale, size: bounds.size)
+//        let rectInSelfSpace = HexagonalView.rectInContentView(point: view.center, zoomScale: zoomScale, size: self.contentSize)
         scrollRectToVisible(rectInSelfSpace, animated: true)
     }
     
@@ -325,7 +367,13 @@ public extension HexagonalViewDataSource {
             viewsArray.append(createHexagonalViewItem(index: index))
         }
         
+        self.contentSize = CGSize(width: self.bounds.size.width*2, height: self.bounds.size.height*2)
+//        self.setContentOffset(CGPoint(x: self.bounds.size.width*2, y: 0), animated: false)
+        
         self.createHexagonalGrid()
+        
+        
+        
     }
     
     /**
@@ -335,7 +383,7 @@ public extension HexagonalViewDataSource {
      
      - returns: an optionnal HexagonalItemView
      */
-    public func viewForIndex(index: Int) -> HexagonalItemView? {
+    @objc public func viewForIndex(index: Int) -> HexagonalItemView? {
         guard index < viewsArray.count else { return nil }
         
         return viewsArray[index]
@@ -384,6 +432,7 @@ extension HexagonalView: UIScrollViewDelegate {
     }
     
     public func scrollViewDidZoom(_ scrollView: UIScrollView) {
+//        print("scrollViewDidZoom")
         zoomScaleCache = zoomScale
         
         //center the contentView each time we zoom
@@ -391,17 +440,23 @@ extension HexagonalView: UIScrollViewDelegate {
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        NSObject.cancelPreviousPerformRequests(withTarget: self)
         //for each view snap if close to border
         for view in viewsArray {
             transformView(view: view)
         }
+        //ensure that the end of scroll is fired.
+        self.perform(#selector(scrollViewDidEndScrollingAnimation(_:)), with: scrollView, afterDelay: 0.3)
     }
     
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        
         let size = self.bounds.size
         
         //the new contentView offset
         let newOffset: CGPoint = targetContentOffset.pointee
+//        print("newOffset", newOffset.x, newOffset.y)
         
         //put proposedTargetCenter in coordinates relative to contentView
         var proposedTargetCenter = CGPoint(x: newOffset.x+size.width/2, y:newOffset.y+size.height/2)
@@ -410,6 +465,7 @@ extension HexagonalView: UIScrollViewDelegate {
         
         //find the closest userView relative to contentView center
         lastFocusedViewIndex = HexagonalView.closestIndexToContentViewCenter(contentViewCenter: proposedTargetCenter, currentIndex: lastFocusedViewIndex, views: viewsArray)
+//        print("scrollViewWillEndDragging lastFocusedViewIndex", lastFocusedViewIndex)
         
         //tell that we need to center on new index
         centerOnEndScroll = true
@@ -417,15 +473,22 @@ extension HexagonalView: UIScrollViewDelegate {
     
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         //if we don't need do decelerate
-        guard  !decelerate else { return }
-        
+//        guard  !decelerate else { return }
+//
+//        print("scrollViewDidEndDragging lastFocusedViewIndex", lastFocusedViewIndex)
         //center the userView
         centerOnIndex(index: lastFocusedViewIndex, zoomScale: zoomScale)
     }
     
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        print("scrollViewDidEndDecelerating")
         //center the userView
         centerOnIndex(index: lastFocusedViewIndex, zoomScale: zoomScale)
+    }
+    
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        NSObject.cancelPreviousPerformRequests(withTarget: self)
+//        print("scrollViewDidEndScrollingAnimation")
     }
 }
 
@@ -437,3 +500,92 @@ extension HexagonalView: HexagonalItemViewDelegate {
     }
 }
 
+
+@objc public class LFTPulseAnimation: CALayer {
+   
+    var radius:                 CGFloat = 200.0
+    var fromValueForRadius:     Float = 2.0
+    var fromValueForAlpha:      Float = 0//0.45
+    var keyTimeForHalfOpacity:  Float = 0.2
+    var animationDuration:      TimeInterval = 3.0
+    var pulseInterval:          TimeInterval = 0.0
+    var useTimingFunction:      Bool = true
+    var animationGroup:         CAAnimationGroup = CAAnimationGroup()
+    var repetitions:            Float = Float.infinity
+
+    // Need to implement that, because otherwise it can't find
+    // the constructor init(layer:AnyObject!)
+    // Doesn't seem to look in the super class
+    override init(layer: Any) {
+        super.init(layer: layer)
+    }
+    
+    init(repeatCount: Float=Float.infinity, radius: CGFloat, position: CGPoint, color: UIColor?) {
+        super.init()
+        self.contentsScale = UIScreen.main.scale
+        self.opacity = 0.0
+        self.backgroundColor = color != nil ? color?.cgColor : UIColor.blue.cgColor
+        self.radius = radius;
+        self.repetitions = repeatCount;
+        self.position = position
+
+        DispatchQueue.global(qos: .background).async {
+            self.setupAnimationGroup()
+            self.setPulseRadius(radius: self.radius)
+            
+            if (self.pulseInterval != Double.infinity) {
+                DispatchQueue.main.async {
+                    self.add(self.animationGroup, forKey: "pulse")
+                }
+            }
+        }
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setPulseRadius(radius: CGFloat) {
+        self.radius = radius
+        let tempPos = self.position
+        let diameter = self.radius * 2
+        
+        self.bounds = CGRect(x: self.position.x, y: self.position.y, width: diameter, height: diameter)
+        self.cornerRadius = self.radius
+        self.position = tempPos
+    }
+    
+    func setupAnimationGroup() {
+        self.animationGroup = CAAnimationGroup()
+        self.animationGroup.duration = self.animationDuration + self.pulseInterval
+        self.animationGroup.repeatCount = self.repetitions
+        self.animationGroup.isRemovedOnCompletion = false
+        
+        if self.useTimingFunction {
+            let defaultCurve = CAMediaTimingFunction(name: CAMediaTimingFunctionName.default)
+            self.animationGroup.timingFunction = defaultCurve
+        }
+        
+        self.animationGroup.animations = [createScaleAnimation(), createOpacityAnimation()]
+    }
+    
+    func createScaleAnimation() -> CABasicAnimation {
+        let scaleAnimation = CABasicAnimation(keyPath: "transform.scale.xy")
+        scaleAnimation.fromValue = NSNumber(value: self.fromValueForRadius)
+        scaleAnimation.toValue = NSNumber(value: 3.8)
+        scaleAnimation.duration = self.animationDuration
+        
+        return scaleAnimation
+    }
+    
+    func createOpacityAnimation() -> CAKeyframeAnimation {
+        let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
+        opacityAnimation.duration = self.animationDuration
+        opacityAnimation.values = [self.fromValueForAlpha, 0.13, 0]
+        opacityAnimation.keyTimes = [0, self.keyTimeForHalfOpacity as NSNumber, 1]
+        opacityAnimation.isRemovedOnCompletion = false
+        
+        return opacityAnimation
+    }
+    
+}

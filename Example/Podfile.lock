@@ -2,11 +2,15 @@ PODS:
   - Hexacon (1.0.6)
 
 DEPENDENCIES:
-  - Hexacon
+  - Hexacon (from `/Users/nathan/Documents/github/sweet-io/tmp/Hexacon`)
+
+EXTERNAL SOURCES:
+  Hexacon:
+    :path: "/Users/nathan/Documents/github/sweet-io/tmp/Hexacon"
 
 SPEC CHECKSUMS:
   Hexacon: a97ac6d97c8d4fc84f99709277657fed64333946
 
-PODFILE CHECKSUM: 018917b84b2d9ada8adc86e0dcf61fbca15c9223
+PODFILE CHECKSUM: 86be8e831df0f256f20d456eab8df22f751a439e
 
-COCOAPODS: 1.0.0
+COCOAPODS: 1.8.4
