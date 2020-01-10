@@ -31,6 +31,8 @@ class AppViewController: UIViewController {
                                                           itemBorderColor: UIColor.gray,
                                                           itemGlowColor: nil,
                                                           itemPulse: true,
+                                                          itemPulseZoomFrom: 1.4,
+                                                          itemPulseZoomTo: 1.6,
                                                           animationType: .Circle,
                                                           animationDuration: 0.05)
         return view
@@ -44,7 +46,7 @@ class AppViewController: UIViewController {
         for (index, element) in ["call","mail","music","appstore","message","settings","photo","camera","safari","notes",
         "addressbook","time","calculator","movie","maps","facetime","gamecenter","compass",
         "passbook","stocks","newsstand","calendar","reminders","weather","itunes"].enumerated() {
-            iconArray.append(ItemImage(image: UIImage(named: element)!, appearance: HexagonalItemViewAppearance(needToConfigureItem: true, itemSize: index == 6 || index == 10 ? 60 : 50, itemSpacing: 25, itemBorderWidth: index == 6 || index == 10 ? 4 : 0, itemBorderColor: index == 6 || index == 10 ? UIColor.lightGray : UIColor.clear, itemGlowColor: index == 6 || index == 10 ? UIColor.blue : nil, itemPulse: index == 6 || index == 10, animationType: HexagonalAnimationType.Circle, animationDuration: 0.3)))
+            iconArray.append(ItemImage(image: UIImage(named: element)!, appearance: HexagonalItemViewAppearance(needToConfigureItem: true, itemSize: index == 6 || index == 10 ? 60 : 50, itemSpacing: 25, itemBorderWidth: index == 6 || index == 10 ? 4 : 0, itemBorderColor: index == 6 || index == 10 ? UIColor.lightGray : UIColor.clear, itemGlowColor: index == 6 || index == 10 ? UIColor.blue : nil, itemPulse: index == 6 || index == 10, itemPulseZoomFrom: 1.4, itemPulseZoomTo: 1.6, animationType: HexagonalAnimationType.Circle, animationDuration: 0.3)))
         }
         
         view.backgroundColor = UIColor.white

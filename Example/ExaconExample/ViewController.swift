@@ -14,7 +14,7 @@ final class ViewController: UIViewController {
     // MARK: - data
     
     let iconArray: [ItemImage] = ["Burglar","Businesswoman-1","Hacker","Ninja","Rapper-2","Rasta","Rocker","Surfer","Telemarketer-Woman-2"].map {
-        return ItemImage(image: UIImage(named: $0)!, appearance: HexagonalItemViewAppearance(needToConfigureItem: false, itemSize: 50, itemSpacing: 25, itemBorderWidth: 2, itemBorderColor: UIColor.clear, itemGlowColor: nil, itemPulse: true, animationType: HexagonalAnimationType.Circle, animationDuration: 0.3))
+        return ItemImage(image: UIImage(named: $0)!, appearance: HexagonalItemViewAppearance(needToConfigureItem: false, itemSize: 50, itemSpacing: 25, itemBorderWidth: 2, itemBorderColor: UIColor.clear, itemGlowColor: nil, itemPulse: true, itemPulseZoomFrom: 1.4, itemPulseZoomTo: 1.6, animationType: HexagonalAnimationType.Circle, animationDuration: 0.3))
     }
     
     var dataArray = [ItemImage]()

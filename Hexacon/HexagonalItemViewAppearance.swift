@@ -20,6 +20,8 @@ import UIKit
     @objc public var itemBorderColor: UIColor
     @objc public var itemGlowColor: UIColor?
     @objc public var itemPulse: Bool
+    @objc public var itemPulseZoomFrom: CGFloat
+    @objc public var itemPulseZoomTo: CGFloat
     
     //animation
     @objc public var animationType: HexagonalAnimationType
@@ -32,6 +34,8 @@ import UIKit
                 itemBorderColor: UIColor,
                 itemGlowColor: UIColor?,
                 itemPulse: Bool,
+                itemPulseZoomFrom: CGFloat,
+                itemPulseZoomTo: CGFloat,
                 animationType: HexagonalAnimationType,
                 animationDuration: TimeInterval) {
         
@@ -42,6 +46,8 @@ import UIKit
         self.itemBorderColor = itemBorderColor
         self.itemGlowColor = itemGlowColor
         self.itemPulse = itemPulse
+        self.itemPulseZoomFrom = itemPulseZoomFrom
+        self.itemPulseZoomTo = itemPulseZoomTo
         self.animationType = animationType
         self.animationDuration = animationDuration
     }
@@ -54,6 +60,8 @@ import UIKit
                                            itemBorderColor: UIColor.gray,
                                            itemGlowColor: nil,
                                            itemPulse: false,
+                                           itemPulseZoomFrom: 1.4,
+                                           itemPulseZoomTo: 1.6,
                                            animationType: .Circle,
                                            animationDuration: 0.2)
     }

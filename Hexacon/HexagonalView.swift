@@ -156,7 +156,7 @@ public extension HexagonalViewDataSource {
     
     // MARK: - configuration methods
     
-    @objc public func createHexagonalGrid() {
+    @objc public func createHexagonalGrid(widthMultiplier: CGFloat = 0, heightMultiplier: CGFloat = 1.5, xCenter: CGFloat = 100, yCenter: CGFloat = 0) {
         //instantiate the hexagonal pattern with the number of views
         hexagonalPattern = HexagonalPattern(size: viewsArray.count, itemSpacing: itemAppearance.itemSpacing, itemSize: itemAppearance.itemSize)
         hexagonalPattern.repositionCenter = { [weak self] (center, ring, index) in
@@ -165,10 +165,10 @@ public extension HexagonalViewDataSource {
         
         //set the contentView frame with the theorical size of th hexagonal grid
         let contentViewSize = hexagonalPattern.sizeForGridSize()
-        contentView.bounds = CGRect(x: 0, y: 0, width: contentViewSize, height: 1.5*contentViewSize)
-        contentView.center = CGPoint(x: center.x + 100, y: center.y)
+        contentView.bounds = CGRect(x: 0, y: 0, width: (widthMultiplier > 0 ? widthMultiplier : 1)*contentViewSize, height: (heightMultiplier > 0 ? heightMultiplier : 1)*contentViewSize)
+        contentView.center = CGPoint(x: center.x + xCenter, y: center.y + yCenter)
         
-        //start creating hte grid
+        //start creating the grid
         hexagonalPattern.createGrid(FromCenter: CGPoint(x: contentView.frame.width/2, y: contentView.frame.height/2))
         
     }
@@ -353,7 +353,7 @@ public extension HexagonalViewDataSource {
     /**
      This function load or reload all the view from the dataSource and refreshes the display
      */
-    @objc public func reloadData() {
+    @objc public func reloadData(widthMultiplier: CGFloat = 0, heightMultiplier: CGFloat = 1.5, xCenter: CGFloat = 100, yCenter: CGFloat = 0) {
         contentView.subviews.forEach { $0.removeFromSuperview() }
         viewsArray = [HexagonalItemView]()
         
@@ -370,7 +370,7 @@ public extension HexagonalViewDataSource {
         self.contentSize = CGSize(width: self.bounds.size.width*2, height: self.bounds.size.height*2)
 //        self.setContentOffset(CGPoint(x: self.bounds.size.width*2, y: 0), animated: false)
         
-        self.createHexagonalGrid()
+        self.createHexagonalGrid(widthMultiplier: widthMultiplier, heightMultiplier: heightMultiplier, xCenter: xCenter, yCenter: yCenter)
         
         
         

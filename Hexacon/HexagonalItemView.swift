@@ -17,6 +17,8 @@ import UIKit
     // MARK: - data
     @objc public var isActive: Bool = false
     @objc public var itemGlowColor: UIColor? = UIColor.clear
+    @objc public var itemPulseZoomFrom: CGFloat = 1.4;
+    @objc public var itemPulseZoomTo: CGFloat = 1.6;
     
     public init(image: UIImage, appearance: HexagonalItemViewAppearance) {
         if appearance.needToConfigureItem {
@@ -29,13 +31,16 @@ import UIKit
 //            let pulseEffect = LFTPulseAnimation(repeatCount: Float.infinity, radius:10, position: CGPoint(x: self.bounds.size.width/2, y: self.bounds.size.height/2), color: appearance.itemGlowColor)
 //            self.layer.insertSublayer(pulseEffect, below: self.layer)
 //        }
+        self.itemPulseZoomFrom = appearance.itemPulseZoomFrom
+        self.itemPulseZoomTo = appearance.itemPulseZoomTo
+        
         if appearance.itemPulse {
             self.isActive = true
             if #available(iOS 9.0, *) {
                 let pulse1 = CASpringAnimation(keyPath: "transform.scale")
                 pulse1.duration = CFTimeInterval(Float.random(in: 0.9 ..< 3))
-                pulse1.fromValue = 1.4//1.0
-                pulse1.toValue = 1.6//1.09
+                pulse1.fromValue = self.itemPulseZoomFrom//1.0
+                pulse1.toValue = self.itemPulseZoomTo//1.09
                 pulse1.autoreverses = true
                 pulse1.repeatCount = 1
                 pulse1.initialVelocity = 0.5
