@@ -581,7 +581,7 @@ extension HexagonalView: HexagonalItemViewDelegate {
     func createOpacityAnimation() -> CAKeyframeAnimation {
         let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
         opacityAnimation.duration = self.animationDuration
-        opacityAnimation.values = [self.fromValueForAlpha, 0.13, 0]
+        opacityAnimation.values = [self.fromValueForAlpha, 0.2, 0]
         opacityAnimation.keyTimes = [0, self.keyTimeForHalfOpacity as NSNumber, 1]
         opacityAnimation.isRemovedOnCompletion = false
         
